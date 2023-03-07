@@ -19,38 +19,53 @@ def power(a,b):
 
 def getInput():
     data=parseData(str(input('Enter equation')))
-    print(data)
-    calculate(data)
+    return calculate(data)
 
 def calculate(data):
+    while '(' in data:
+        openBracket = None
+        closeBracket = None
+        for i in range(len(data)):
+            if data[i] == '(':
+                openBracket = i
+            elif data[i] == ')':
+                closeBracket = i
+                break
+        if openBracket is not None and closeBracket is not None:
+            sub_data = data[openBracket+1:closeBracket]
+            sub_result = calculate(sub_data)
+            data = data[:openBracket] + [sub_result] + data[closeBracket+1:]
+    
     while len(data) > 1:
         i=1
         while i < len(data):
-            if '/' in data or '*' in data or 'x' in [i.lower() for i in data]:
+            if '^' in data:
+                if data[i] == '^':
+                    data[i] = power(data[i-1],data[i+1])
+                    del(data[i+1])
+                    del(data[i-1])
+                    break
+            elif '/' in data or '*' in data or 'x' in [i.lower() for i in data]:
                 if data[i] == '*' or str(data[i]).lower() == 'x':
                     data[i]=multiply(data[i-1],data[i+1])
                     del(data[i+1])
                     del(data[i-1])
-                    print(data)
                     break
                 if data[i] == '/':
                     data[i]=divide(data[i-1],data[i+1])
-                    print(data[i])
                     del(data[i+1])
                     del(data[i-1])
-                    print(data)
                     break
             else:
                 if data[i] == '+':
                     data[i] = add(data[i-1],data[i+1])
                     del(data[i+1])
                     del(data[i-1])
-                    print(data)
                     break
                 if data[i] == '-':
                     data[i] = subtract(data[i-1],data[i+1])
                     del(data[i+1])
                     del(data[i-1])
-                    print(data)
             i+=1
-getInput()
+    return data[0]
+print(getInput())
