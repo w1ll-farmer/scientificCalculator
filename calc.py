@@ -11,8 +11,24 @@ def divide(a,b):
     return str(float(a)/float(b))
 
 def parseData(data):
-    print(data)
-    return [i for i in data if i != " "]
+    data= [i for i in data if i != " "]
+    i=0
+    while i < len(data)-1:
+        print(data)
+        if data[i].isdigit() and data[i+1].isdigit():
+            data[i]+=data[i+1]
+            del(data[i+1])
+        if data[i] == '-':
+            data[i+1] = str(-float(data[i+1]))
+            if i ==0:
+                del(data[i])
+            elif data[i-1].isdigit():
+                data[i]='+'
+            else:
+                del(data[i])
+        i+=1
+    return data
+
 
 def power(a,b):
     return str(float(a)**float(b))
